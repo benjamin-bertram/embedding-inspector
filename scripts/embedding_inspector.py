@@ -10,6 +10,7 @@ from modules.shared import cmd_opts
 import torch, os
 from modules.textual_inversion.textual_inversion import Embedding
 import collections, math, random
+from safetensors.torch import save_file
 
 MAX_NUM_MIX = 16 # number of embeddings that can be mixed
 SHOW_NUM_MIX = 6 # number of mixer lines to show initially
@@ -24,7 +25,7 @@ ENABLE_GRAPH = False
 GRAPH_VECTOR_LIMIT = 8 # max number of vectors to draw in graph
 ENABLE_SHOW_CHECKSUM = False #slows down listing loaded embeddings
 REMOVE_ZEROED_VECTORS = True #optional
-EMB_SAVE_EXT = '.pt' #'.bin'
+EMB_SAVE_EXT = '.safetensors' #'.pt' #'.bin' 
 
 EVAL_PRESETS = ['None','',
     'Boost','=v*8',
@@ -58,6 +59,11 @@ def get_data():
         tokenizer = open_clip_tokenizer
         internal_embs = embedder.model.token_embedding.wrapped.weight
 
+    # elif embedder.__class__.__name__=='FrozenOpenCLIPEmbedder2': # SDXL detected
+    #     from modules.sd_hijack_open_clip import tokenizer as open_clip_tokenizer
+    #     tokenizer = open_clip_tokenizer
+    #     internal_embs = embedder.model.token_embedding.wrapped.weight
+    
     else:
         tokenizer = None
         internal_embs = None
@@ -404,8 +410,10 @@ def do_save(*args):
                     new_emb.step = step_val
                     results.append('Setting step value to '+str(step_val))
 
+                data_to_save = {save_name: tot_vec}
                 try:
-                    new_emb.save(save_filename)
+                    #new_emb.save(save_filename)
+                    save_file(data_to_save, save_filename) 
                     results.append('Saved "'+save_filename+'"')
                     anything_saved = True
 
