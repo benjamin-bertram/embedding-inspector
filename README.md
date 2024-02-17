@@ -1,3 +1,6 @@
+# Added safetensor support for saving new embeddings
+
+
 # Notice: For unknown reason the the author of this extension [@tkalayci71](https://github.com/tkalayci71) has deleted his GitHub account<br>This is a re-uploaded clone
 original URL https://github.com/tkalayci71/embedding-inspector
 Since the code is licensed under [Unlicense](LICENSE), I have re-uploaded the repository using a found fork on GitHub.
